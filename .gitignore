@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+package-lock.json
+
+# File di log
+*.log
+
+# Certificati locali (se presenti)
+*.key
+*.crt
+*.pem
+
+# Ambiente locale
+.env
+
+# Debug
+.vscode/

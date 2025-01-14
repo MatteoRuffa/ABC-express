@@ -1,0 +1,23 @@
+{
+  "name": "abc-express",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatteoRuffa/ABC-express.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MatteoRuffa/ABC-express/issues"
+  },
+  "homepage": "https://github.com/MatteoRuffa/ABC-express#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
