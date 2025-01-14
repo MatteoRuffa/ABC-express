@@ -1,59 +1,30 @@
-//Esempio: Sistema di Autenticazione con Token JWT (json web token)
-
+//Esempio: Upload di file con Multer
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs'); 
+const multer = require('multer');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const SECRET_KEY = 'my_secret_key';
 
-app.use(express.json());
-
-let users = [];
-
-//register
-app.post('/register', (req, res) => {
-    const { username, password } = req.body;
-
-    const hashedPassword = bcrypt.hashSync(password, 10);
-    users.push({ username, password: hashedPassword});
-
-    res.status(201).send('User registered successfully');
+//config storage multer
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
 });
 
-// Login
-app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-    const user = users.find(u => u.username === username);  
-    
-    if (!user || !(await bcrypt.compare(password, user.password))) {  
-      return res.status(401).send('Invalid credentials');
-    }
-  
-    // Genera token JWT
-    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token });
-  });
-  
+const upload = multer ({ storage});
 
-//middleware protect private routs
-const authMiddleware = (req, res, next) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).send('Unauthorized');
+//middleware folder uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-    try {
-        const decoded = jwt.verify(token, SECRET_KEY);
-        req.user = decoded;
-        next();
-    } catch (err) {
-        res.status(401).send('token not valid or expired'); 
-    }
-};
-
-//private protected route
-app.get('/profile', authMiddleware, (req, res) => {
-    res.send(`Welcome on your profile, ${req.user.username}`);
+//routes 
+app.post('/upload', upload.single('file'), (req, res) => {
+    if (!req.file) return res.status(400).send('No file uploaded');
+    res.send(`file successfully uploaded: <a href="/uploads/${req.file.filename}">view file</a>`);
 });
 
 //start server
