@@ -18,6 +18,8 @@
   "homepage": "https://github.com/MatteoRuffa/ABC-express#readme",
   "description": "",
   "dependencies": {
-    "express": "^4.21.2"
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
   }
 }
