@@ -1,8 +1,8 @@
 //Esempio: Sistema di Autenticazione con Token JWT (json web token)
 
-const express = required('express');
-const jwt = required('jsonwebtoken');
-const bcrypt = required('bcryptjs'); 
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,23 +22,24 @@ app.post('/register', (req, res) => {
     res.status(201).send('User registered successfully');
 });
 
-//login
+// Login
 app.post('/login', async (req, res) => {
-    const { username, password} = req.body;
-    const user = users.find(u => u.username === username);
-
-    if(!user || !(await bcrypt.compare(password, utente.password))) {
-        return res.status(401).send('Invalid credentials');
+    const { username, password } = req.body;
+    const user = users.find(u => u.username === username);  
+    
+    if (!user || !(await bcrypt.compare(password, user.password))) {  
+      return res.status(401).send('Invalid credentials');
     }
-
-    // generate token JWT
-    const token = jwt.sign({ username }, SECRET_KEY, {expiresIn: '1h'});
+  
+    // Genera token JWT
+    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
     res.json({ token });
-});
+  });
+  
 
 //middleware protect private routs
 const authMiddleware = (req, res, next) => {
-    const token = req.headers.authorization?.split('')[1];
+    const token = req.headers.authorization?.split(' ')[1];
     if (!token) return res.status(401).send('Unauthorized');
 
     try {
