@@ -1,8 +1,8 @@
 //Esempio: Sistema di Autenticazione con Token JWT (json web token)
 
-const express = require('express');
+const express = required('express');
 const jwt = required('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const bcrypt = required('bcryptjs'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,13 +17,13 @@ app.post('/register', (req, res) => {
     const { username, password } = req.body;
 
     const hashedPassword = bcrypt.hashSync(password, 10);
-    users.push({ ussername, password: hashedPassword});
+    users.push({ username, password: hashedPassword});
 
     res.status(201).send('User registered successfully');
 });
 
 //login
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, password} = req.body;
     const user = users.find(u => u.username === username);
 
@@ -38,7 +38,7 @@ app.post('/login', (req, res) => {
 
 //middleware protect private routs
 const authMiddleware = (req, res, next) => {
-    const token = req.headers.authorizacion?.split('')[1];
+    const token = req.headers.authorization?.split('')[1];
     if (!token) return res.status(401).send('Unauthorized');
 
     try {
@@ -56,6 +56,6 @@ app.get('/profile', authMiddleware, (req, res) => {
 });
 
 //start server
-app-AudioListener(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
